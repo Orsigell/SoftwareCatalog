@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: meta-info}"/>
+<body>
+<div th:replace="~{fragments/header :: navbar}"/>
+<div class="container">
+    <h1>Добавление</h1>
+    <form action="#" th:action="@{/categories/adding}"
+          th:object="${categories}" method="post">
+        <div class="form-group">
+            <label for="nameFormControlInput" class="form-label bold-text">Наименование</label>
+            <input type="text" class="form-control" id="nameFormControlInput" th:field="*{name}">
+            <div class="form-group">
+                <label for="softwareIdFormControlSelect" class="form-label bold-text">Выберите программу</label>
+                <select class="form-select" id="softwareIdFormControlSelect" name="softwareId">
+                    <option value="" selected>Не выбрано</option>
+                    <!-- Используйте Thymeleaf для итерации по списку программ -->
+                    <option th:each="software : ${allSoftware}" th:value="${software.id}" th:text="${software.name}"></option>
+                </select>
+            </div>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+        <input type="submit" class="btn btn-success" style="margin-top: 1rem; margin-right: 1rem;" value="Добавить"/>
+        <input type="reset" class="btn btn-warning" style="margin-top: 1rem;" value="Очистить поле"/>
+    </form>
+    <a href="javascript:history.back()" class="btn btn-info" style="margin-top: 1rem;">Вернуться назад</a>
+</div>
+</body>
+</html>

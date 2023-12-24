@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: meta-info}"/>
+<body>
+<div th:replace="~{fragments/header :: navbar}"/>
+<div class="container">
+    <h1>Изменение</h1>
+    <form action="#" th:action="@{/comments/update}" th:object="${comments}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="nameFormControlInput" class="form-label bold-text">Наименование</label>
+            <input type="text" class="form-control" id="nameFormControlInput" th:field="*{comment}">
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
+        </div>
+        <input type="submit" class="btn btn-success" style="margin-top: 1rem; margin-right: 1rem;" value="Изменить"/>
+        <input type="reset" class="btn btn-warning" style="margin-top: 1rem;" value="Очистить поле"/>
+    </form>
+    <a href="javascript:history.back()" class="btn btn-info" style="margin-top: 1rem;">Вернуться назад</a>
+</div>
+</body>
+</html>

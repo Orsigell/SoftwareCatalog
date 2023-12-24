@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: meta-info}"/>
+<body>
+<div th:replace="~{fragments/header :: navbar}"/>
+<div class="container">
+    <h1>Добавление скриншота</h1>
+    <form action="#" th:action="@{/screens/adding}" th:object="${screens}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="fileFormControlInput" class="form-label bold-text">Выберите файл</label>
+            <input type="file" class="form-control" id="fileFormControlInput" name="file" accept="image/*">
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('screen')}" th:errors="*{screen}"></div>
+        </div>
+        <div class="form-group">
+            <label for="softwareSelect" class="form-label bold-text">Выберите программу</label>
+            <select class="form-control" id="softwareSelect" name="softwareId">
+                <option th:each="software : ${allSoftware}" th:value="${software.id}" th:text="${software.name}"></option>
+            </select>
+        </div>
+        <input type="submit" class="btn btn-success" style="margin-top: 1rem; margin-right: 1rem;" value="Добавить"/>
+        <input type="reset" class="btn btn-warning" style="margin-top: 1rem;" value="Очистить поле"/>
+    </form>
+    <a href="javascript:history.back()" class="btn btn-info" style="margin-top: 1rem;">Вернуться назад</a>
+</div>
+</body>
+</html>
