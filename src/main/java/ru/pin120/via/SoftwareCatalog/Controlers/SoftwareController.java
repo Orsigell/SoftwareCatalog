@@ -18,6 +18,10 @@ import ru.pin120.via.SoftwareCatalog.Services.ScreensService;
 import ru.pin120.via.SoftwareCatalog.Services.SoftwareService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -48,11 +52,16 @@ public class SoftwareController {
         this.screensService = screensService;
     }
     @GetMapping("/software")
-    public String main(Model model) {
-        List<Software> allSoftware = softwareService.getAllSoftware();
+    public String main(@RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "size", defaultValue = "10") int size,
+                       Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Software> softwarePage = softwareService.getAllSoftware(pageable);
         List<Categories> allCategories = categoriesService.getAllCategories(); // Получение списка категорий
-        model.addAttribute("softwares", allSoftware);
+        model.addAttribute("softwares", softwarePage.getContent());
         model.addAttribute("categories", allCategories); // Добавление списка категорий в модель
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", softwarePage.getTotalPages());
         return "software/index";
     }
 
@@ -280,7 +289,7 @@ public class SoftwareController {
 
             if (software != null) {
                 // Связываем скриншот с программой
-                screens.setSoftwares(List.of(software));
+                screens.setSoftware(software);
                 software.getScreens().add(screensService.createScreens(screens));
 
                 // Сохраняем изменения в базе данных
@@ -300,14 +309,12 @@ public class SoftwareController {
 
     @PostMapping("/comments/adding/{softwareId}")
     public String createComment(@PathVariable Long softwareId, @RequestParam String comment, Model model) {
-        Comments newComment = new Comments();
-        newComment.setComment(comment);
-
-
-        Comments createdComment = commentsService.createComment(newComment);
         Software software = softwareService.getSoftwareById(softwareId).orElse(null);
-
         if (software != null) {
+            Comments newComment = new Comments();
+            newComment.setSoftware(software);
+            newComment.setComment(comment);
+            Comments createdComment = commentsService.createComment(newComment);
             software.getComments().add(createdComment);
             softwareService.updateSoftware(software);
         }

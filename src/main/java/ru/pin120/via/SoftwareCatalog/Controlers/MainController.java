@@ -6,16 +6,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pin120.via.SoftwareCatalog.Models.Categories;
+import ru.pin120.via.SoftwareCatalog.Models.Software;
+import ru.pin120.via.SoftwareCatalog.SoftwareParser;
+
+import java.util.List;
 
 @Controller
 public class MainController {
     @GetMapping("/")
-    public String main(Model model){return "redirect:/software";}
+    public String main(Model model){
+        return "redirect:/software";
+    }
     @GetMapping("/about")
-    public String about(@RequestParam(name="name", required = false, defaultValue = "По умолчанию") String name, Model model){
-        model.addAttribute("author", name);
+    public String about(){
         return "main/about";
+    }
+    @PostMapping("/uploadData")
+    public String uploadData(@RequestParam("filePath") String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return "redirect:/software";
+        }
+        List<Software> entries = SoftwareParser.readExcelFile(filePath);
+
+        return "redirect:/software";
     }
     //@GetMapping("/form")
     //public String mainForm(Model model){

@@ -1,8 +1,14 @@
 package ru.pin120.via.SoftwareCatalog.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.pin120.via.SoftwareCatalog.Models.Comments;
+import ru.pin120.via.SoftwareCatalog.Models.Screens;
 import ru.pin120.via.SoftwareCatalog.Models.Software;
+import ru.pin120.via.SoftwareCatalog.Repositories.CommentsRepository;
+import ru.pin120.via.SoftwareCatalog.Repositories.ScreensRepository;
 import ru.pin120.via.SoftwareCatalog.Repositories.SoftwareRepository;
 
 import java.util.List;
@@ -14,6 +20,17 @@ import java.util.stream.Collectors;
 public class SoftwareService {
 
     private SoftwareRepository softwareRepository;
+
+    private CommentsService commentsService;
+    private ScreensService screensService;
+    @Autowired
+    public void setCommentsService(CommentsService commentsService){
+        this.commentsService = commentsService;
+    }
+    @Autowired
+    public void setScreensService(ScreensService screensService){
+        this.screensService = screensService;
+    }
 
     @Autowired
     public SoftwareService(SoftwareRepository softwareRepository) {
@@ -40,7 +57,14 @@ public class SoftwareService {
     }
     // Метод для удаления по ID
     public void deleteSoftware(Long id) {
+        Optional<Software> software = softwareRepository.findById(id);
+        screensService.deleteScreens(software.get().getScreens());
+        commentsService.deleteComments(software.get().getComments());
         softwareRepository.deleteById(id);
+    }
+
+    public Page<Software> getAllSoftware(Pageable pageable) {
+        return softwareRepository.findAll(pageable);
     }
 
     public Optional<Software> getSoftwareById(Long softwareId) {

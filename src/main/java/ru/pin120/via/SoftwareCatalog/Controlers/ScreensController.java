@@ -52,7 +52,7 @@ public class ScreensController {
 
             // Получите программу по ее ID и добавьте скриншот к ней
             Software software = softwareService.getSoftwareById(softwareId).orElseThrow(() -> new RuntimeException("Программа не найдена"));
-            screens.getSoftwares().add(software);
+            screens.setSoftware(software);
 
             // Сохранение информации о скриншоте в базе данных
             screensService.createScreens(screens);

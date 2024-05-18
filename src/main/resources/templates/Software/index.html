@@ -31,42 +31,64 @@
             </form>
         </div>
         <div class="col-md-9">
-        <h1>Программы</h1>
-    <h4><a class="btn btn-success" style="margin-bottom: 1rem;" th:href="@{/software/adding}">Добавить</a></h4>
-    <span th:if="${softwares?.size() == 0}">Список программ пуст</span>
-    <table th:if="${softwares?.size() > 0}" class="table table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <td>Изображение</td>
-            <td>Наименование ПО</td>
-            <td>Название лицензии</td>
-            <td>Тип лицензии</td>
-            <td>Цена лицензии</td>
-            <td>Длительность лицензии</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="software : ${softwares}">
-            <td>
-                <img th:src="@{'/uploads/' + ${software.image}}" alt="Изображение программы" class="program-image" style="height: 240px;"/>
-            </td>
-            <td th:text="${software.name}"/>
-            <td th:text="${software.licenseName}"></td>
-            <td th:text="${software.licenseType}"></td>
-            <td th:text="${software.licensePrice}"></td>
-            <td th:text="${software.licenseDuration}"></td>
-            <td><a class="btn btn-info" th:href="@{'/software/details/' + ${software.id}}">Детализация</a></td>
-            <td><a class="btn btn-warning" th:href="@{'/software/editing/' + ${software.id}}">Изменить данные</a></td>
-            <td><a class="btn btn-danger" th:href="@{'/software/delete/' + ${software.id}}">Удалить</a></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-</div>
-</div>
+            <h1>Программы</h1>
+            <!-- Кнопка добавления видима только для администраторов -->
+            <h4>
+                <a class="btn btn-success" style="margin-bottom: 1rem;" th:href="@{/software/adding}" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                    Добавить
+                </a>
+            </h4>
+            <span th:if="${softwares?.size() == 0}">Список программ пуст</span>
+            <table th:if="${softwares?.size() > 0}" class="table table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <td>Изображение</td>
+                    <td>Наименование ПО</td>
+                    <td>Название лицензии</td>
+                    <td>Тип лицензии</td>
+                    <td>Цена лицензии</td>
+                    <td>Длительность лицензии</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="software : ${softwares}">
+                    <td>
+                        <img th:src="@{'/uploads/' + ${software.image}}" alt="Изображение программы" class="program-image" style="height: 240px;"/>
+                    </td>
+                    <td th:text="${software.name}"></td>
+                    <td th:text="${software.licenseName}"></td>
+                    <td th:text="${software.licenseType}"></td>
+                    <td th:text="${software.licensePrice} + ' руб'"></td>
+                    <td th:text="${software.licenseDuration}"></td>
+                    <td><a class="btn btn-info" th:href="@{'/software/details/' + ${software.id}}">Детализация</a></td>
+                    <!-- Кнопки изменения и удаления видимы только для администраторов -->
+                    <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><a class="btn btn-warning" th:href="@{'/software/editing/' + ${software.id}}">Изменить данные</a></td>
+                    <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><a class="btn btn-danger" th:href="@{'/software/delete/' + ${software.id}}">Удалить</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Пагинация -->
+            <nav th:if="${totalPages > 1}">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/software(page=${currentPage - 1}, size=${size})}">Предыдущая</a>
+                    </li>
+                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${pageNum == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/software(page=${pageNum}, size=${size})}"
+                           th:text="${pageNum + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/software(page=${currentPage + 1}, size=${size})}">Следующая</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 </body>
 </html>

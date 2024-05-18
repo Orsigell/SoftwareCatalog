@@ -1,6 +1,7 @@
 package ru.pin120.via.SoftwareCatalog.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,9 +31,10 @@ public class Screens {
     @Column(name = "screen")
     private String screen;
 
-    @JsonBackReference
-    @ManyToMany(mappedBy = "screens")
-    private List<Software> softwares;
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "software_id")
+    private Software software;
     public Screens(String path) {
         this.screen = path;
     }

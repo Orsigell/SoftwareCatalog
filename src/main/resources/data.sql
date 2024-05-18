@@ -1,5 +1,5 @@
 -- Вставка реалистичных данных для Категорий
-INSERT INTO categories (category_name) VALUES
+INSERT INTO categories (software_id,category_name) VALUES
 ('Среда разработки'),
 ('Графический дизайн'),
 ('Проектирование'),
@@ -28,44 +28,6 @@ INSERT INTO categories (category_name) VALUES
 ('test13');
 
 
--- Вставка реалистичных данных для Комментариев
-INSERT INTO comments (comment) VALUES
-    ('Я просто не могу нарадоваться на программу!'),
-    ('Visual Studio - отличная среда разработки!'),
-    ('Adobe Illustrator - мощный инструмент для дизайна.'),
-    ('Autodesk AutoCAD помогает мне создавать проекты.'),
-    ('Mozilla Firefox - самый быстрый браузер!'),
-    ('IntelliJ IDEA - мой выбор для разработки на Java.'),
-    ('Final Cut Pro - профессиональная программа для видеомонтажа.'),
-    ('Unity - отличная платформа для разработки игр.'),
-    ('Adobe Premiere Pro - профессиональная программа для видеомонтажа.'),
-    ('Microsoft Excel помогает мне в работе с данными.'),
-    ('Blender - мощный инструмент для создания 3D-графики.'),
-    ('Sublime Text - легкий и гибкий текстовый редактор.'),
-    ('Adobe After Effects - отличный инструмент для создания видеоэффектов.'),
-    ('Xcode - мой выбор для разработки под iOS.'),
-    ('PyCharm - лучшая среда разработки для Python.'),
-    ('Audacity - простое в использовании программное обеспечение для звукозаписи.'),
-    ('MATLAB - мощный инструмент для научных расчетов и визуализации данных.'),
-    ('Atom - открытый текстовый редактор, разработанный компанией GitHub.'),
-    ('test'),
-    ('Лучшая среда разработки'),
-    ('t');
-
-
-INSERT INTO screens (screen) VALUES
-  ('1.jpg'),
-  ('2.jpg'),
-  ('Снимок экрана 2023-05-30 125011.jpg'),
-  ('Снимок экрана 2023-05-30 125146.jpg'),
-  ('cpuid-hwmonitor-download.jpg'),
-  ('softwares-hwpro13.png'),
-  ('3.jpg'),
-  ('Снимок экрана 2023-05-30 125011.jpg'),
-  ('Снимок экрана 2023-05-30 125103.jpg'),
-  ('Снимок экрана 2023-05-30 125146.jpg'),
-  ('Снимок экрана 2023-05-30 170936.jpg');
-
 -- Вставка реалистичных данных для Программного обеспечения
 INSERT INTO software (name, description, image, link, system_requirements, license_name, license_type, license_price, license_duration)
 VALUES
@@ -87,6 +49,45 @@ VALUES
 ('Audacity', 'Audacity — свободное программное обеспечение для обработки звука и звукозаписи.', 'audacity.jpg', 'http://www.audacityteam.org', 'Windows 10, 2 ГБ ОЗУ, 100 МБ свободного места на диске', 'Audacity Team', 'Бесплатная', 0, 0),
 ('MATLAB', 'MATLAB — высокоуровневый язык программирования и среда разработки, предназначенная для численных расчетов и визуализации данных.', 'matlab.jpg', 'http://www.mathworks.com/matlab', 'Windows 10, 4 ГБ ОЗУ, 5 ГБ свободного места на диске', 'MathWorks', 'Подписка', 1999, 12),
 ('Atom', 'Atom — открытый текстовый редактор, разработанный компанией GitHub.', 'atom.jpg', 'http://www.atom.io', 'Windows 10, 4 ГБ ОЗУ, 500 МБ свободного места на диске', 'GitHub', 'Бесплатная', 0, 0);
+
+-- Вставка реалистичных данных для Комментариев
+INSERT INTO comments (software_id,comment) VALUES
+    (1,'Я просто не могу нарадоваться на программу!'),
+    (2,'Visual Studio - отличная среда разработки!'),
+    (3,'Adobe Illustrator - мощный инструмент для дизайна.'),
+    (4,'Autodesk AutoCAD помогает мне создавать проекты.'),
+    (5,'Mozilla Firefox - самый быстрый браузер!'),
+    (6,'IntelliJ IDEA - мой выбор для разработки на Java.'),
+    (7,'Final Cut Pro - профессиональная программа для видеомонтажа.'),
+    (8,'Unity - отличная платформа для разработки игр.'),
+    (9,'Adobe Premiere Pro - профессиональная программа для видеомонтажа.'),
+    (10,'Microsoft Excel помогает мне в работе с данными.'),
+    (11,'Blender - мощный инструмент для создания 3D-графики.'),
+    (12,'Sublime Text - легкий и гибкий текстовый редактор.'),
+    (13,'Adobe After Effects - отличный инструмент для создания видеоэффектов.'),
+    (14,'Xcode - мой выбор для разработки под iOS.'),
+    (15,'PyCharm - лучшая среда разработки для Python.'),
+    (16,'Audacity - простое в использовании программное обеспечение для звукозаписи.'),
+    (17,'MATLAB - мощный инструмент для научных расчетов и визуализации данных.'),
+    (18,'Atom - открытый текстовый редактор, разработанный компанией GitHub.'),
+    (18,'test'),
+    (2,'Лучшая среда разработки'),
+    (18,'t');
+
+
+INSERT INTO screens (screen) VALUES
+  (1,'1.jpg'),
+  (1,'2.jpg'),
+  (2,'Снимок экрана 2023-05-30 125011.jpg'),
+  (2,'Снимок экрана 2023-05-30 125146.jpg'),
+  (3,'cpuid-hwmonitor-download.jpg'),
+  (3,'softwares-hwpro13.png'),
+  (4,'3.jpg'),
+  (4,'Снимок экрана 2023-05-30 125011.jpg'),
+  (5,'Снимок экрана 2023-05-30 125103.jpg'),
+  (5,'Снимок экрана 2023-05-30 125146.jpg'),
+  (5,'Снимок экрана 2023-05-30 170936.jpg');
+
 
 -- Вставка реалистичных данных для связи между Программным обеспечением и Категориями
 -- Пример для связи программ с категориями
@@ -128,62 +129,3 @@ INSERT INTO software_categories (software_id, category_id) VALUES
 (17, 14), (17, 11), (17, 5),
 -- Software 18 (Atom) - Multiple categories
 (18, 9), (18, 11), (18, 17);
-
-
-
-
-
--- Establish relationships between software and comments
-INSERT INTO software_comments (software_id, comment_id) VALUES
--- Software 1 (StellarStudio) - Single comment
-(1, 1),
--- Software 2 (Visual Studio) - Single comment
-(2, 2),
--- Software 3 (Adobe Illustrator) - Single comment
-(1, 3),
--- Software 4 (Autodesk AutoCAD) - Single comment
-(1, 4),
--- Software 5 (Mozilla Firefox) - Single comment
-(1, 5),
--- Software 6 (IntelliJ IDEA) - Single comment
-(1, 6),
--- Software 7 (Final Cut Pro) - Single comment
-(3, 7),
--- Software 8 (Unity) - Single comment
-(1, 8),
--- Software 9 (Adobe Premiere Pro) - Single comment
-(1, 9),
--- Software 10 (Microsoft Excel) - Single comment
-(3, 10),
--- Software 11 (Blender) - Single comment
-(1, 11),
--- Software 12 (Sublime Text) - Single comment
-(3, 12),
--- Software 13 (Adobe After Effects) - Single comment
-(3, 13),
--- Software 14 (Xcode) - Single comment
-(3, 14),
--- Software 15 (PyCharm) - Single comment
-(3, 15),
--- Software 16 (Audacity) - Single comment
-(3, 16),
--- Software 17 (MATLAB) - Single comment
-(3, 17),
--- Software 18 (Atom) - Single comment
-(3, 18);
-
-
-
-INSERT INTO software_screens (software_id, screen_id) VALUES
--- Software 1 (StellarStudio) - Single comment
-(1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(3, 5),
-(3, 6),
-(3, 7),
-(4, 8),
-(4, 9),
-(1, 10),
-(1, 11);

@@ -41,13 +41,13 @@ public class ScreensService {
     }
 
     public void deleteScreens(Long id) {
-
         Screens screens = screensRepository.findById(id).orElse(null);
-        if (screens != null) {
-            for (Software software : screens.getSoftwares()) {
-                software.getScreens().remove(screens);
-            }
-            screensRepository.deleteById(id);
+        screens.getSoftware().getScreens().remove(screens);
+        screensRepository.deleteById(id);
+    }
+    public void deleteScreens(List <Screens> screens){
+        for(Screens screen : screens){
+            screensRepository.delete(screen);
         }
     }
 }

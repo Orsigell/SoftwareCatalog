@@ -46,17 +46,18 @@ public class CommentsService {
 
     // Метод для удаления по ID
     public void deleteComment(Long id) {
-
         Comments comments = commentsRepository.findById(id).orElse(null);
-        if (comments != null) {
-            for (Software software : comments.getSoftwares()) {
-                software.getComments().remove(comments);
-            }
-            commentsRepository.deleteById(id);
-        }
+        comments.getSoftware().getComments().remove(comments);
+        commentsRepository.deleteById(id);
     }
 
     public List<Comments> findByTextIgnoreCase(String text) {
         return commentsRepository.findByCommentIgnoreCase(text);
+    }
+
+    public void deleteComments(List<Comments> comments) {
+        for(Comments comment : comments){
+            commentsRepository.delete(comment);
+        }
     }
 }

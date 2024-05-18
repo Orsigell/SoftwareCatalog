@@ -2,6 +2,7 @@ package ru.pin120.via.SoftwareCatalog.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
@@ -28,12 +29,14 @@ public class Software {
      * Название программного обеспечения.
      */
     @Column(name = "name")
+    @NotEmpty
     private String name;
 
     /**
      * Описание программного обеспечения.
      */
     @Column(name = "description")
+    @NotEmpty
     private String description;
 
     /**
@@ -46,24 +49,28 @@ public class Software {
      * Ссылка на программное обеспечение.
      */
     @Column(name = "link")
+    @NotEmpty
     private String link;
 
     /**
      * Системные требования для программного обеспечения.
      */
     @Column(name = "system_requirements")
+    @NotEmpty
     private String systemRequirements;
 
     /**
      * Название лицензии программного обеспечения.
      */
     @Column(name = "license_name")
+    @NotEmpty
     private String licenseName;
 
     /**
      * Тип лицензии программного обеспечения.
      */
     @Column(name = "license_type")
+    @NotEmpty
     private String licenseType;
 
     /**
@@ -88,17 +95,17 @@ public class Software {
 
     @ManyToMany
     @JoinTable(
-            name = "software_comments",
+            name = "software_tags",
             joinColumns = @JoinColumn(name = "software_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id")
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    private List<Tags> tags;
+
+    @OneToMany(mappedBy = "software")
+    @JsonBackReference
     private List<Comments> comments;
 
-    @ManyToMany
-    @JoinTable(
-            name = "software_screens",
-            joinColumns = @JoinColumn(name = "software_id"),
-            inverseJoinColumns = @JoinColumn(name = "screen_id")
-    )
+    @OneToMany(mappedBy = "software")
+    @JsonBackReference
     private List<Screens> screens;
 }
