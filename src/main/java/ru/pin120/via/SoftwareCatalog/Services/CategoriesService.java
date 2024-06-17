@@ -4,6 +4,7 @@ import ru.pin120.via.SoftwareCatalog.Models.Categories;
 import ru.pin120.via.SoftwareCatalog.Models.Software;
 import ru.pin120.via.SoftwareCatalog.Repositories.CategoriesRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,7 @@ public class CategoriesService {
 
     public List<Categories> getAllCategories() {
         List<Categories> categories = categoriesRepository.findAll();
-        return categories.stream()
-                .sorted((c1, c2) -> Long.compare(c2.getId(), c1.getId())) // Сортировка в обратном порядке
-                .collect(Collectors.toList());
+        return new ArrayList<>(categories);
     }
 
     // Метод для удаления по ID

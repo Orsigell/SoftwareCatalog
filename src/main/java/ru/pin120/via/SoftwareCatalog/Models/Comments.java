@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -29,15 +30,29 @@ public class Comments {
     /**
      * Текст комментария.
      */
-    @Column(name = "comment")
+    @Column(name = "comment", columnDefinition = "LONGTEXT")
     @NotEmpty
     private String comment;
+
+    /**
+     * Оценка комментария.
+     */
+    @Column(name = "rating")
+    @NotNull
+    private Long rating;
 
     @ManyToOne
     @JsonManagedReference
     @JoinColumn(name = "software_id")
     private Software software;
-    public Comments(String commentText) {
+
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Comments(String commentText, Long rating) {
         this.comment = commentText;
+        this.rating = rating;
     }
 }

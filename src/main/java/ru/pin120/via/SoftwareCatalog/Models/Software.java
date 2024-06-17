@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Модель программного обеспечения.
@@ -26,6 +29,12 @@ public class Software {
     private long id;
 
     /**
+     * Идентификатор программного обеспечения.
+     */
+    @Column(name = "reestr_id")
+    private long reestr_id;
+
+    /**
      * Название программного обеспечения.
      */
     @Column(name = "name")
@@ -35,9 +44,25 @@ public class Software {
     /**
      * Описание программного обеспечения.
      */
-    @Column(name = "description")
-    @NotEmpty
+    @Column(name = "description", length = 65535)
     private String description;
+    /**
+     * Цена программного обеспечения в виде текста.
+     */
+    @Column(name = "price_text", length = 65535)
+    private String priceText;
+
+    @Column(name = "is_image_updatable", columnDefinition = "boolean default true")
+    private boolean isImageUpdatable = true;
+
+    @Column(name = "is_description_updatable", columnDefinition = "boolean default true")
+    private boolean isDescriptionUpdatable = true;
+
+    @Column(name = "is_price_updatable", columnDefinition = "boolean default true")
+    private boolean isPriceUpdatable = true;
+
+    @ManyToMany(mappedBy = "favorites")
+    private Set<User> subscribedUsers = new HashSet<>();
 
     /**
      * Путь к изображению программного обеспечения.
@@ -48,42 +73,12 @@ public class Software {
     /**
      * Ссылка на программное обеспечение.
      */
-    @Column(name = "link")
+    @Column(name = "link", length = 65535)
     @NotEmpty
     private String link;
 
-    /**
-     * Системные требования для программного обеспечения.
-     */
-    @Column(name = "system_requirements")
-    @NotEmpty
-    private String systemRequirements;
-
-    /**
-     * Название лицензии программного обеспечения.
-     */
-    @Column(name = "license_name")
-    @NotEmpty
-    private String licenseName;
-
-    /**
-     * Тип лицензии программного обеспечения.
-     */
-    @Column(name = "license_type")
-    @NotEmpty
-    private String licenseType;
-
-    /**
-     * Цена лицензии программного обеспечения.
-     */
-    @Column(name = "license_price")
-    private double licensePrice;
-
-    /**
-     * Длительность лицензии программного обеспечения.
-     */
-    @Column(name = "license_duration")
-    private double licenseDuration;
+    @Column(name = "view_count")
+    private int viewCount;
 
     @ManyToMany
     @JoinTable(
@@ -101,6 +96,22 @@ public class Software {
     )
     private List<Tags> tags;
 
+    @ManyToMany
+    @JoinTable(
+            name = "software_cods",
+            joinColumns = @JoinColumn(name = "software_id"),
+            inverseJoinColumns = @JoinColumn(name = "code_id")
+    )
+    private List<Code> cods;
+
+    @ManyToMany
+    @JoinTable(
+            name = "software_os",
+            joinColumns = @JoinColumn(name = "software_id"),
+            inverseJoinColumns = @JoinColumn(name = "os_id")
+    )
+    private List<OS> os;
+
     @OneToMany(mappedBy = "software")
     @JsonBackReference
     private List<Comments> comments;
@@ -108,4 +119,25 @@ public class Software {
     @OneToMany(mappedBy = "software")
     @JsonBackReference
     private List<Screens> screens;
+
+    @OneToMany(mappedBy = "software")
+    @JsonBackReference
+    private List<Synonym> synonyms;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, link);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Software software = (Software) o;
+        return reestr_id == software.reestr_id &&
+                name.equals(software.name) &&
+                ((!isDescriptionUpdatable) || (description == null ? "" : description).equals((software.description == null ? "" : software.description))) &&
+                ((!isPriceUpdatable) || (priceText == null ? "" : priceText).equals((software.priceText == null ? "" : software.priceText))) &&
+                link.equals(software.link);
+    }
 }

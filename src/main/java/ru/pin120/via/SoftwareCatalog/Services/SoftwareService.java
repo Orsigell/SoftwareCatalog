@@ -23,6 +23,7 @@ public class SoftwareService {
 
     private CommentsService commentsService;
     private ScreensService screensService;
+    private UserService userService;
     @Autowired
     public void setCommentsService(CommentsService commentsService){
         this.commentsService = commentsService;
@@ -36,6 +37,8 @@ public class SoftwareService {
     public SoftwareService(SoftwareRepository softwareRepository) {
         this.softwareRepository = softwareRepository;
     }
+    @Autowired
+    public void setUserService(UserService userService) { this.userService = userService; }
 
     // Метод для создания
     public Software createSoftware(Software software) {
@@ -52,22 +55,42 @@ public class SoftwareService {
     public List<Software> getAllSoftware() {
         List<Software> softwareList = (List<Software>) softwareRepository.findAll();
         return softwareList.stream()
-                .sorted((s1, s2) -> Long.compare(s2.getId(), s1.getId())) // Сортировка в обратном порядке
+                //.sorted((s1, s2) -> Long.compare(s2.getId(), s1.getId())) // Сортировка в обратном порядке
                 .collect(Collectors.toList());
     }
     // Метод для удаления по ID
     public void deleteSoftware(Long id) {
         Optional<Software> software = softwareRepository.findById(id);
-        screensService.deleteScreens(software.get().getScreens());
-        commentsService.deleteComments(software.get().getComments());
-        softwareRepository.deleteById(id);
+        if (software.isPresent()) {
+            Software sw = software.get();
+            sw.getSubscribedUsers().forEach(user -> user.getFavorites().remove(sw));
+            softwareRepository.save(sw);
+            softwareRepository.deleteById(id);
+        }
     }
 
+//    public Page<Software> getFilteredSoftware(
+//            List<Long> osIds,
+//            List<Long> tagIds,
+//            List<Long> categoryIds,
+//            List<Long> codeIds,
+//            String keyword,
+//            String sort,
+//            Pageable pageable) {
+//        return softwareRepository.filterSoftware(osIds, tagIds, categoryIds, codeIds, keyword, sort, pageable);
+//    }public Page<Software> getFilteredSoftware(List<Long> osIds, List<Long> tagIds, List<Long> categoryIds, List<Long> codeIds, String keyword, String sort, Pageable pageable) {
+//        Page<Software> filteredSoftware = softwareRepository.filterSoftware(osIds, tagIds, categoryIds, codeIds, keyword, pageable);
+//        return softwareRepository.sortSoftware(sort, pageable);
+//    }
     public Page<Software> getAllSoftware(Pageable pageable) {
         return softwareRepository.findAll(pageable);
     }
 
     public Optional<Software> getSoftwareById(Long softwareId) {
         return softwareRepository.findById(softwareId);
+    }
+
+    public Optional<Software> getSoftwareByReestrId(Long reestr_id) {
+        return softwareRepository.findAllbyReestrId(reestr_id);
     }
 }

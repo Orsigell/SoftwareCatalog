@@ -1,10 +1,10 @@
 package ru.pin120.via.SoftwareCatalog.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.pin120.via.SoftwareCatalog.Models.Categories;
 import ru.pin120.via.SoftwareCatalog.Models.Comments;
-import ru.pin120.via.SoftwareCatalog.Models.Software;
 import ru.pin120.via.SoftwareCatalog.Repositories.CommentsRepository;
 
 import java.util.List;
@@ -13,25 +13,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentsService {
-    private CommentsRepository commentsRepository;
 
     @Autowired
+    private CommentsRepository commentsRepository;
+
     public CommentsService(CommentsRepository commentsRepository) {
         this.commentsRepository = commentsRepository;
     }
 
-    // Метод для создания
     public Comments createComment(Comments comments) {
         return commentsRepository.save(comments);
     }
 
-    // Метод для получения по ID
     public Comments getCommentById(Long id) {
         Optional<Comments> optionalComment = commentsRepository.findById(id);
         return optionalComment.orElse(null);
     }
 
-    // Метод для обновления
     public Comments updateComment(Comments comments) {
         return commentsRepository.save(comments);
     }
@@ -44,11 +42,18 @@ public class CommentsService {
                 .collect(Collectors.toList());
     }
 
+    // Метод для получения всех с пагинацией
+    public Page<Comments> getAllComments(Pageable pageable) {
+        return commentsRepository.findAll(pageable);
+    }
+
     // Метод для удаления по ID
     public void deleteComment(Long id) {
         Comments comments = commentsRepository.findById(id).orElse(null);
-        comments.getSoftware().getComments().remove(comments);
-        commentsRepository.deleteById(id);
+        if (comments != null) {
+            comments.getSoftware().getComments().remove(comments);
+            commentsRepository.deleteById(id);
+        }
     }
 
     public List<Comments> findByTextIgnoreCase(String text) {
@@ -56,8 +61,16 @@ public class CommentsService {
     }
 
     public void deleteComments(List<Comments> comments) {
-        for(Comments comment : comments){
+        for (Comments comment : comments) {
             commentsRepository.delete(comment);
         }
+    }
+
+    public List<Comments> getCommentsByUser(Long userId) {
+        return commentsRepository.findByUserId(userId);
+    }
+
+    public Integer getCommentCount(long id) {
+        return commentsRepository.findBySoftware_id(id).size();
     }
 }

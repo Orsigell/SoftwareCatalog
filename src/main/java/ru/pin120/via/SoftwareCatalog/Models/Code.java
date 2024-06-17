@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Модель категорий.
+ * Модель кода продуктов.
  */
 @Data
 @Entity
@@ -16,26 +16,26 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Categories {
+public class Code {
     /**
-     * Уникальный идентификатор класса.
+     * Уникальный идентификатор кода.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Column(name = "code_id")
     private long id;
 
     /**
-     * Название класса.
+     * Название кода.
      */
-    @Column(name = "category_name")
+    @Column(name = "code_name")
     @NotEmpty
     private String name;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "cods")
     private List<Software> softwares;
-    public Categories(String text) {
+    public Code(String text) {
         this.name = text;
     }
 }

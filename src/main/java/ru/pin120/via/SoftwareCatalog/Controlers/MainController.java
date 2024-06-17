@@ -1,20 +1,32 @@
 package ru.pin120.via.SoftwareCatalog.Controlers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import ru.pin120.via.SoftwareCatalog.FileUtil;
 import ru.pin120.via.SoftwareCatalog.Models.Categories;
+import ru.pin120.via.SoftwareCatalog.Models.Code;
 import ru.pin120.via.SoftwareCatalog.Models.Software;
+import ru.pin120.via.SoftwareCatalog.Models.Synonym;
+import ru.pin120.via.SoftwareCatalog.Services.*;
 import ru.pin120.via.SoftwareCatalog.SoftwareParser;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class MainController {
+    @Autowired
+    private ParsingService parsingService;
     @GetMapping("/")
     public String main(Model model){
         return "redirect:/software";
@@ -23,25 +35,15 @@ public class MainController {
     public String about(){
         return "main/about";
     }
-    @PostMapping("/uploadData")
-    public String uploadData(@RequestParam("filePath") String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
-            return "redirect:/software";
-        }
-        List<Software> entries = SoftwareParser.readExcelFile(filePath);
 
-        return "redirect:/software";
+    @PostMapping("/uploadData")
+    @ResponseBody
+    public ModelAndView exportData() {
+        String exportPath = FileUtil.downloadFile();
+        if (exportPath != null){
+            List<Software> newSoftwares = SoftwareParser.readExcelFile(exportPath);
+            parsingService.parseAndUpdate(newSoftwares);
+        }
+        return new ModelAndView("redirect:/software");
     }
-    //@GetMapping("/form")
-    //public String mainForm(Model model){
-    //    model.addAttribute("student", new Categories());
-    //    return "main-form";
-    // }
-    //@PostMapping("/form")
-    //public String mainForm(@ModelAttribute Categories student, Model model) {
-    //    student.setId(0);
-    //    student.setName("");
-    //    model.addAttribute("student", student);
-    //    return "result";
-    //}
 }

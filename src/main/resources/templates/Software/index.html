@@ -3,92 +3,210 @@
 <head th:replace="~{fragments/header :: meta-info}"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .scrollable-block {
+        max-height: 700px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 15px;
+        background-color: #343a40;
+        color: #ffffff;
+    }
+    .rating-column {
+        width: 150px; /* Adjust the width as needed */
+    }
+    .program-card {
+        background-color: #343a40;
+        color: #ffffff;
+        border: 1px solid #444;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 10px;
+    }
+    .program-card img {
+        width: 100%;
+        height: auto;
+        max-width: 200px; /* Ограничиваем максимальную ширину */
+        max-height: 200px; /* Ограничиваем максимальную высоту */
+        display: block;
+        margin: 0 auto;
+        border-radius: 10px;
+    }
+    .program-title {
+        font-size: 1.5rem;
+        margin-top: 10px;
+        color: #ffffff;
+        text-align: center; /* Выравнивание по центру */
+    }
+    .program-meta {
+        margin-top: 10px;
+        font-size: 1rem;
+        text-align: center; /* Выравнивание по центру */
+    }
+    .program-meta .fa-star {
+        color: #ffcc00;
+    }
+    .program-meta .fa-star.empty {
+        color: #ccc;
+    }
+    .program-actions {
+        margin-top: 10px;
+        text-align: center; /* Выравнивание по центру */
+    }
+    .pagination {
+        justify-content: center;
+    }
+</style>
 </head>
 <body>
 <div th:replace="~{fragments/header :: navbar}"/>
-<div class="container">
+<div class="container mt-4">
     <div class="row">
         <div class="col-md-3 categories-section">
             <form th:action="@{/software}" method="post" class="form-inline">
-                <h3>Выберите категории:</h3>
-                <div class="form-group">
+                <h3 class="text-light">Выберите категории:</h3>
+                <div class="form-group scrollable-block">
                     <!-- Вывод списка категорий -->
                     <div th:each="category : ${categories}">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="category" name="categories" th:value="${category.id}" />
+                            <input class="form-check-input" type="checkbox" id="category" name="categories" th:value="${category.id}" th:checked="${selectedCategories != null && selectedCategories.contains(category.id)}"/>
                             <label class="form-check-label" th:for="${'category_' + category.id}" th:text="${category.name}"></label>
                         </div>
                     </div>
                 </div>
-                <div class="search-section">
-                    <div class="form-group">
-                        <label for="searchText">Поиск по названию:</label>
-                        <input type="text" class="form-control" id="searchText" name="searchText"
-                               placeholder="Введите название программы">
+                <h3 class="text-light">Выберите теги:</h3>
+                <div class="form-group scrollable-block">
+                    <!-- Вывод списка тегов -->
+                    <div th:each="tag : ${tags}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="tag" name="tags" th:value="${tag.id}" th:checked="${selectedTags != null && selectedTags.contains(tag.id)}"/>
+                            <label class="form-check-label" th:for="${'tag_' + tag.id}" th:text="${tag.name}"></label>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Фильтровать</button>
+                </div>
+                <h3 class="text-light">Выберите коды продукта:</h3>
+                <div class="form-group scrollable-block">
+                    <!-- Вывод списка кодов -->
+                    <div th:each="code : ${codes}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="code" name="codes" th:value="${code.id}" th:checked="${selectedCodes != null && selectedCodes.contains(code.id)}"/>
+                            <label class="form-check-label" th:for="${'code_' + code.id}" th:text="${code.name}"></label>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-light">Выберите ОС:</h3>
+                <div class="form-group scrollable-block">
+                    <div th:each="os : ${oss}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="os" name="os" th:value="${os.id}" th:checked="${selectedOS != null && selectedOS.contains(os.id)}"/>
+                            <label class="form-check-label" th:for="${'os_' + os.id}" th:text="${os.name}"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-section mt-3">
+                    <div class="form-group">
+                        <label for="searchText" class="text-light">Поиск по названию:</label>
+                        <input type="text" class="form-control" id="searchText" name="searchText" placeholder="Введите название программы" th:value="${searchText}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="sort" class="text-light">Сортировать по:</label>
+                        <select class="form-control" id="sort" name="sort">
+                            <option value="name" th:selected="${sort == 'name'}">Названию</option>
+                            <option value="rating" th:selected="${sort == 'rating'}">Оценке</option>
+                            <option value="comments" th:selected="${sort == 'comments'}">Количество комментариев</option>
+                            <option value="views" th:selected="${sort == 'views'}">Количество просмотров</option>
+                            <option value="subscriptions" th:selected="${sort == 'subscriptions'}">Количество подписок</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Фильтровать</button>
+                    <a class="btn btn-secondary mt-2" th:href="@{/software}">Очистить</a>
                 </div>
             </form>
         </div>
         <div class="col-md-9">
-            <h1>Программы</h1>
-            <!-- Кнопка добавления видима только для администраторов -->
-            <h4>
-                <a class="btn btn-success" style="margin-bottom: 1rem;" th:href="@{/software/adding}" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                    Добавить
-                </a>
-            </h4>
-            <span th:if="${softwares?.size() == 0}">Список программ пуст</span>
-            <table th:if="${softwares?.size() > 0}" class="table table-hover">
-                <thead class="thead-dark">
-                <tr>
-                    <td>Изображение</td>
-                    <td>Наименование ПО</td>
-                    <td>Название лицензии</td>
-                    <td>Тип лицензии</td>
-                    <td>Цена лицензии</td>
-                    <td>Длительность лицензии</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="software : ${softwares}">
-                    <td>
-                        <img th:src="@{'/uploads/' + ${software.image}}" alt="Изображение программы" class="program-image" style="height: 240px;"/>
-                    </td>
-                    <td th:text="${software.name}"></td>
-                    <td th:text="${software.licenseName}"></td>
-                    <td th:text="${software.licenseType}"></td>
-                    <td th:text="${software.licensePrice} + ' руб'"></td>
-                    <td th:text="${software.licenseDuration}"></td>
-                    <td><a class="btn btn-info" th:href="@{'/software/details/' + ${software.id}}">Детализация</a></td>
-                    <!-- Кнопки изменения и удаления видимы только для администраторов -->
-                    <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><a class="btn btn-warning" th:href="@{'/software/editing/' + ${software.id}}">Изменить данные</a></td>
-                    <td th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"><a class="btn btn-danger" th:href="@{'/software/delete/' + ${software.id}}">Удалить</a></td>
-                </tr>
-                </tbody>
-            </table>
+            <span th:if="${softwares?.size() == 0}" class="text-light">Список программ пуст</span>
+            <div th:if="${softwares?.size() > 0}" class="program-list">
+                <div th:each="software : ${softwares}" class="program-card">
+                    <img th:src="@{'/uploads/' + ${software.image}}" alt="Изображение программы" onerror="this.onerror=null;this.src='/uploads/NotFound.png';" />
+                    <div class="program-title" th:text="${software.name}"></div>
+                    <div class="program-meta">
+                        <span th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i th:if="${i <= softwareRatings[software.id]}" class="fas fa-star"></i>
+                            <i th:if="${i > softwareRatings[software.id]}" class="far fa-star empty"></i>
+                        </span>
+                        <span th:text="'(' + ${softwareRatings[software.id]} + ' из 5)'"></span>
+                        <span th:text="' | Комментарии: ' + ${commentCounts[software.id]}"></span>
+                        <span th:text="' | Просмотры: ' + ${software.viewCount}"></span>
+                        <span th:text="' | Подписки: ' + ${subscriptionCounts.get(software.id)}"></span>
+                    </div>
+                    <div class="program-actions">
+                        <a class="btn btn-info" th:href="@{'/software/details/' + ${software.id}}">Детализация</a>
+                        <form th:action="@{'/software/' + ${software.id} + '/addFavorite'}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-success">Добавить в избранное</button>
+                        </form>
+                        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="btn btn-warning" th:href="@{'/software/editing/' + ${software.id}}">Изменить</a>
+                        <a class="btn btn-info" th:href="@{${software.link}}">Посетить сайт</a>
+                        <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" href="#" class="btn btn-danger" th:attr="data-id=${software.id}" onclick="confirmDelete(this);">Удалить</a>
+                    </div>
+                </div>
+            </div>
 
             <!-- Пагинация -->
             <nav th:if="${totalPages > 1}">
                 <ul class="pagination">
+                    <!-- Previous Page Link -->
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link" th:href="@{/software(page=${currentPage - 1}, size=${size})}">Предыдущая</a>
                     </li>
-                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
-                        th:classappend="${pageNum == currentPage} ? 'active'">
-                        <a class="page-link" th:href="@{/software(page=${pageNum}, size=${size})}"
-                           th:text="${pageNum + 1}">1</a>
+
+                    <!-- First Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'active'">
+                        <a class="page-link" th:href="@{/software(page=0, size=${size})}">1</a>
                     </li>
+
+                    <!-- Ellipsis for large page numbers -->
+                    <li class="page-item" th:if="${currentPage > 6}">
+                        <span class="page-link">...</span>
+                    </li>
+
+                    <!-- Middle Page Links -->
+                    <li class="page-item" th:each="pageNum : ${#numbers.sequence(currentPage - 5 > 0 ? currentPage - 5 : 1, currentPage + 5 < totalPages - 2 ? currentPage + 5 : totalPages - 2)}"
+                        th:classappend="${pageNum == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/software(page=${pageNum}, size=${size})}" th:text="${pageNum + 1}"></a>
+                    </li>
+
+                    <!-- Ellipsis for large page numbers -->
+                    <li class="page-item" th:if="${currentPage < totalPages - 6}">
+                        <span class="page-link">...</span>
+                    </li>
+
+                    <!-- Last Page Link -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'active'">
+                        <a class="page-link" th:href="@{/software(page=${totalPages - 1}, size=${size})}" th:text="${totalPages}"></a>
+                    </li>
+
+                    <!-- Next Page Link -->
                     <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                         <a class="page-link" th:href="@{/software(page=${currentPage + 1}, size=${size})}">Следующая</a>
                     </li>
                 </ul>
             </nav>
+
+
+
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function confirmDelete(element) {
+        if (confirm("Вы точно хотите удалить? Данное действие необратимо и приведет к удалению информации")) {
+            var entityId = element.getAttribute("data-id");
+            window.location.href = '/software/delete/' + entityId;
+        }
+    }
+</script>
 </body>
 </html>

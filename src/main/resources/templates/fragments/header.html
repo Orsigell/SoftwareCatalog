@@ -8,35 +8,45 @@
 </head>
 <body>
 <div th:fragment="navbar" class="container-fluid">
-  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-      <span class="fs-4">Программы</span>
-    </a>
-    <ul class="nav nav-pills">
-      <li class="nav-item"><a th:href="@{/software}" class="nav-link">Программы</a></li>
-      <li class="nav-item"><a th:href="@{/categories}" class="nav-link">Категории</a></li>
-      <li class="nav-item"><a th:href="@{/comments}" class="nav-link">Комментарии</a></li>
-      <li class="nav-item"><a th:href="@{/screens}" class="nav-link">Скриншоты</a></li>
-      <form action="/uploadData" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileInput" style="display: none;" />
-        <button type="button" onclick="document.getElementById('fileInput').click();" class="btn btn-primary">Выгрузить данные</button>
-        <input type="submit" style="display: none;" />
-      </form>
-      <li class="nav-item"><a th:href="@{/about}" class="nav-link active" aria-current="page">Автор</a></li>
-
-      <div sec:authorize="isAuthenticated()">
-        <li class="nav-item"><a th:href="@{/profile}" class="nav-link">Профиль</a></li>
-        <form th:action="@{/logout}" method="post">
-          <button type="submit" class="btn btn-danger">Выйти</button>
-        </form>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Программы</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<!--          <li class="nav-item"><a th:href="@{/categories}" class="nav-link">Категории</a></li>-->
+          <li class="nav-item"><a th:href="@{/comments}" class="nav-link">Комментарии</a></li>
+            <li class="nav-item"><a th:href="@{/software/favorites}" class="nav-link">Мои подписки</a></li>
+          <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="nav-item"><a th:href="@{/screens}" class="nav-link">Скриншоты</a></li>
+          <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="nav-item"><a th:href="@{/tags}" class="nav-link">Теги</a></li>
+            <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="nav-item"><a th:href="@{/os}" class="nav-link">Ос</a></li>
+          <form th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:action="@{/uploadData}" method="post" class="d-inline ms-2">
+            <button type="submit" class="btn btn-primary">Выгрузить данные</button>
+          </form>
+          <!--      <form  th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" action="@{/uploadData}" method="post" enctype="multipart/form-data">-->
+          <!--        <input type="file" name="file" id="fileInput" style="display: none;" />-->
+          <!--        <button type="button" onclick="document.getElementById('fileInput').click();" class="btn btn-primary">Выгрузить данные</button>-->
+          <!--        <input type="submit" style="display: none;" />-->
+          <!--      </form>-->
+<!--          <li class="nav-item"><a th:href="@{/about}" class="nav-link active" aria-current="page">Автор</a></li>-->
+        </ul>
+        <div class="d-flex align-items-center">
+          <div sec:authorize="isAuthenticated()" class="d-flex">
+            <a th:href="@{/profile}" class="btn btn-outline-light me-2">Профиль</a>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit" class="btn btn-danger">Выйти</button>
+            </form>
+          </div>
+          <div sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="btn btn-outline-light me-2">Вход</a>
+            <a th:href="@{/register}" class="btn btn-outline-light">Регистрация</a>
+          </div>
+        </div>
       </div>
-      <div sec:authorize="isAnonymous()">
-        <li class="nav-item"><a th:href="@{/login}" class="nav-link">Вход</a></li>
-        <li class="nav-item"><a th:href="@{/register}" class="nav-link">Регистрация</a></li>
-      </div>
-    </ul>
-    <h1 th:text="${headerTitle}"></h1>
-  </header>
+    </div>
+  </nav>
 </div>
 </body>
 </html>

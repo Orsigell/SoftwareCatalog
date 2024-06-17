@@ -4,13 +4,18 @@
 <body>
 <div th:replace="~{fragments/header :: navbar}"/>
 <div class="container">
-    <h1>Добавление</h1>
+    <h1>Добавление комментария</h1>
     <form action="#" th:action="@{/comments/adding}"
           th:object="${comments}" method="post">
         <div class="form-group">
-            <label for="nameFormControlInput" class="form-label bold-text">Наименование</label>
-            <input type="text" class="form-control" id="nameFormControlInput" th:field="*{comment}">
+            <label for="comment" class="form-label bold-text">Комментарий</label>
+            <input type="text" class="form-control" id="comment" th:field="*{comment}">
             <div class="alert alert-warning" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
+        </div>
+        <div class="form-group">
+            <label for="rating" class="form-label bold-text">Оценка</label>
+            <input type="number" class="form-control" id="rating" th:field="*{rating}">
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
         </div>
         <input type="submit" class="btn btn-success" style="margin-top: 1rem; margin-right: 1rem;" value="Добавить"/>
         <input type="reset" class="btn btn-warning" style="margin-top: 1rem;" value="Очистить поле"/>

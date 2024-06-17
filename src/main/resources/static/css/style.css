@@ -1,88 +1,193 @@
-
-      * {
+/* Обновленный стиль для всего текста */
+* {
     color: white;
-  }
-    body {
-        background-color: #202124; 
-        color: #ffffff;
-    }
-    
-    .categories-section {
-        border: 1px solid #333333;
-        padding: 15px;
-        margin-bottom: 15px;
-        background-color: #202124; 
-    }
-    
-    .search-section {
-        margin-top: 15px;
-    }
-    
-    .form-check-input {
-        background-color: #333333;
-    }
-    
-    .form-check-label {
-        color: #ffffff;
-    }
-    
-    .form-control {
-        background-color: #333333; 
-        color: #ffffff;
-        border-color: #555555;
-    }
-    
-    .btn-primary {
-        background-color: #555555;
-        border-color: #555555; 
-    }
-    
-    .program-container {
-        border: 1px solid #333333;
-        padding: 15px;
-        margin-bottom: 15px;
-        background-color: #444444; 
-    }
-    
-    .program-image {
-        margin-bottom: 15px;
-    }
-    
-    .program-name {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    
-    .program-description {
-        margin-bottom: 10px;
-    }
-    
-    .program-link {
-        display: block;
-        color: #ffffff;
-        text-decoration: none;
-        margin-bottom: 10px;
-    }
-    
-    .program-link:hover {
-        text-decoration: underline;
-    }
-    
-    .categories-section .form-check {
-        display: block; 
-        margin-bottom: 10px;
-    }    
-    .program-image {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .table {
-       --bs-table-hover-color: #007fff;
-    }
-    .list-group-item{
-        background-color: #202124;
-    }
-    option {
-        background-color: #202124;
-    }
+}
+
+body {
+    background-color: #202124;
+    color: #ffffff;
+}
+
+.categories-section {
+    border: 1px solid #333333;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #202124;
+}
+
+.search-section {
+    margin-top: 15px;
+}
+
+.form-check-input {
+    background-color: #333333;
+}
+
+.form-check-label {
+    color: #ffffff;
+}
+
+.form-control {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+.btn-primary {
+    background-color: #555555;
+    border-color: #555555;
+}
+
+.program-container {
+    border: 1px solid #333333;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #444444;
+}
+
+.program-image {
+    background-color: #e0e0e0; /* Добавляем светло-серый фон для изображений */
+    padding: 10px; /* Дополнительное пространство вокруг изображения */
+    border-radius: 5px; /* Скругленные углы */
+    min-width: 200px;
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.program-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.program-description {
+    margin-bottom: 10px;
+}
+
+.program-link {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.program-link:hover {
+    text-decoration: underline;
+}
+
+.categories-section .form-check {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.table {
+    --bs-table-hover-color: #007fff;
+}
+
+option {
+    background-color: #202124;
+}
+
+.comment-profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Стилизация скроллбаров */
+.scrollable-block {
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.scrollable-block::-webkit-scrollbar {
+    width: 12px; /* Ширина скроллбара */
+}
+
+.scrollable-block::-webkit-scrollbar-track {
+    background: #2b2b2b; /* Цвет фона дорожки скроллбара */
+}
+
+.scrollable-block::-webkit-scrollbar-thumb {
+    background-color: #555; /* Цвет скроллера */
+    border-radius: 10px; /* Скругленные углы */
+    border: 3px solid #2b2b2b; /* Пробел вокруг скроллера, чтобы не исчезал при прокрутке */
+}
+
+.card-header {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.card-body {
+    background-color: #444444;
+    color: #ffffff;
+}
+
+.form-check-input, .form-control, .form-select {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+.btn-primary, .btn-success, .btn-danger {
+    background-color: #555555;
+    border-color: #555555;
+}
+
+.list-group-item {
+    background-color: #202124;
+}
+
+.list-group-item {
+    background-color: #333333;
+}
+
+.comment-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.comment-item .comment-body {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.comment-item .comment-rating {
+    text-align: right;
+}
+
+.scrollable-block {
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.scrollable-block::-webkit-scrollbar {
+    width: 12px;
+}
+
+.scrollable-block::-webkit-scrollbar-track {
+    background: #2b2b2b;
+}
+
+.scrollable-block::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+    border: 3px solid #2b2b2b;
+}
+
+.scrollable-block::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+}
