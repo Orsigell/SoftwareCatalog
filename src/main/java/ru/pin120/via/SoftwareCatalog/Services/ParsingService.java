@@ -30,6 +30,8 @@ public class ParsingService {
     private SynonymService synonymService;
 
     public void parseAndUpdate(List<Software> newSoftwares) {
+        List<Software> preUpdateSoftwareList = softwareService.getAllSoftware();
+        List<Software> updateSoftwareList = new ArrayList<>();
         for (Software software: newSoftwares) {
             Software oldSoftware = softwareService.getSoftwareByReestrId(software.getReestr_id()).orElse(null);
             Software newSoftware = null;
@@ -143,6 +145,7 @@ public class ParsingService {
                                 newSynonyms.stream().noneMatch(newSynonym -> newSynonym.getName().equalsIgnoreCase(currentSynonym.getName())));
 
             }
+            updateSoftwareList.add(newSoftware);
             if(!isNewSoftware){
                 try {
                     softwareService.updateSoftware(newSoftware);
@@ -151,6 +154,10 @@ public class ParsingService {
                 }
             }
         }
+        preUpdateSoftwareList.removeAll(updateSoftwareList);
+//        for (Software deletedSoftware: preUpdateSoftwareList) {
+//            softwareService.deleteSoftware(deletedSoftware.getId());
+//        }
         notificationService.sendUpdateNotification();
     }
 }

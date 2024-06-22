@@ -40,7 +40,7 @@
         <h2>Основная информация</h2>
         <div class="mb-3">
           <label for="name" class="form-label">Наименование ПО:</label>
-          <input type="text" class="form-control" id="name" name="name" th:value="${software.name}" required>
+          <input type="text" class="form-control" id="name" name="name" th:value="${software.name}" readonly>
         </div>
         <div class="mb-3" th:classappend="${!software.isDescriptionUpdatable} ? 'not-updatable' : ''">
           <label for="description" class="form-label">Описание:</label>
@@ -52,7 +52,7 @@
         </div>
         <div class="mb-3">
           <label for="link" class="form-label">Ссылка:</label>
-          <input type="text" class="form-control" id="link" name="link" th:value="${software.link}" required>
+          <input type="text" class="form-control" id="link" name="link" th:value="${software.link}" readonly>
         </div>
       </div>
       <div class="form-section" th:classappend="${!software.isImageUpdatable} ? 'not-updatable' : ''">
